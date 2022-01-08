@@ -3,6 +3,7 @@ import { Table } from "semantic-ui-react";
 
 const UserOrder = ({ adminOrders }) => {
   const totalArr = [];
+  console.log('$$$: ', adminOrders)
 
   return (
     <>

@@ -111,7 +111,7 @@ async function createInitialUsers() {
       username: "Admin",
       email: "admin@gmail.com",
       role: "admin",
-      password: "admin",
+      password: "admin123F",
     });
 
     console.log("Success creating users!");
@@ -176,10 +176,10 @@ async function createInitialProducts() {
       name: "The Gathering",
       description: "Happiness - when everyone comes together.",
       photoUrl:
-        "https://lh3.googleusercontent.com/pw/ACtC-3fx7CbyF1XasVCcZN-r1EFGu5yBWc_5-L2gLwOmgBh9nM-MUbE7qVFBg8bleBpMtjxOezGmakXAzxbqtKsotGnU2p_YjAiGL4zVWItgcn9TDzk-rt4Qeap5ixTSdprPf25VFK-asYPbUZK_2bm3LzaagQ=w626-h830-no?authuser=0",
+        "https://lh3.googleusercontent.com/pw/AM-JKLWcEnvS8un0H99Godcu1BAIZjPRwa9Uostftd32NhU9Waxfs7OXb1MqT78sbVxObcS_dTXR0sGDi2fVykaxVOAku_uObj-02LXguVDkAdEMHo6nSVwQ1NKx5jcDkCEm2v_LalOnK-HMWmICNNZ216meow=w612-h408-no?authuser=0",
       quantity: 19,
       price: 250,
-      department: "Oil and Canvas",
+      department: "Crayons",
       inStock: true,
       count: 1,
     });
