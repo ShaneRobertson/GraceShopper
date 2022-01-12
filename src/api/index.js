@@ -53,10 +53,9 @@ export async function addToCart(userId, productId) {
     userId,
     productId,
   };
-  console.log("data send", dataToSend);
+
   try {
     if (dataToSend.userId && dataToSend.productId.length > 0) {
-      /* console.log(dataToSend.userId, dataToSend.productId.length); */
       const { data } = await axiosWithAuth().patch(`/api/cart`, dataToSend);
       return data;
     }
@@ -77,7 +76,7 @@ export async function createUser(username, email, role, password) {
       dataToSend.password.length > 0
     ) {
       const { data } = await axios.post(`/api/register`, dataToSend);
-      console.log(data);
+
       return data;
     }
   } catch (error) {
@@ -101,14 +100,13 @@ export async function loginUser(username, password) {
 
 // Send google data token to backend
 export async function sendGoogleData(googleData) {
-  console.log("gooogle data", googleData);
   const token = googleData.tokenId;
   const dataToSend = { token };
-  console.log("data send", dataToSend);
+
   try {
     if (dataToSend.token.length > 0) {
       const { data } = await axios.post(`/api/google-login`, dataToSend);
-      console.log("login success");
+
       return data;
     }
   } catch (error) {
@@ -196,7 +194,7 @@ export async function createProduct(
     ) {
       dataToSend.count = 1;
       dataToSend.quantity = 1;
-      console.log("dataToSend in api is: ", dataToSend);
+
       const { data } = await axiosWithAuth().post(`/api/products`, dataToSend);
       return data;
     }
@@ -214,8 +212,7 @@ export async function updateProduct(
   productId
 ) {
   const fieldsObj = { name, description, photoUrl, price, department };
-  console.log("the fields object: ", fieldsObj);
-  console.log("the productID", productId);
+
   try {
     const { data } = await axios.patch(
       `/api/products/${productId}/update`,
@@ -258,10 +255,9 @@ export async function removeFromCart(userId, productId) {
     userId,
     productId,
   };
-  console.log("data send", dataToSend);
+
   try {
     if (dataToSend.userId && dataToSend.productId) {
-      /* console.log(dataToSend.userId, dataToSend.productId.length); */
       const { data } = await axiosWithAuth().patch(
         `/api/cart/remove`,
         dataToSend
@@ -277,7 +273,7 @@ export async function addCount(id) {
   const dataToSend = {
     id,
   };
-  console.log("data send", dataToSend);
+
   try {
     if (dataToSend.id) {
       const { data } = await axiosWithAuth().patch(`/api/count`, dataToSend);
@@ -292,7 +288,7 @@ export async function subtractCount(id) {
   const dataToSend = {
     id,
   };
-  console.log("data send", dataToSend);
+
   try {
     if (dataToSend.id) {
       const { data } = await axiosWithAuth().patch(
@@ -312,11 +308,10 @@ export async function sendToken(total, token) {
     token,
   };
 
-  console.log("data send", dataToSend);
   try {
     if (dataToSend.total && dataToSend.token) {
       const { data } = await axiosWithAuth().post(`/api/stripe`, dataToSend);
-      console.log("data1", data);
+
       return data;
     }
   } catch (error) {
@@ -326,11 +321,11 @@ export async function sendToken(total, token) {
 
 export async function checkout(userId, cartId) {
   const dataToSend = { userId, cartId };
-  console.log("data send", dataToSend);
+
   try {
     if (dataToSend.userId && dataToSend.cartId) {
       const { data } = await axios.post(`/api/checkout`, dataToSend);
-      console.log("data2", data);
+
       return data;
     }
   } catch (error) {
@@ -340,9 +335,7 @@ export async function checkout(userId, cartId) {
 
 export async function checkOrdersAndCart(userId) {
   try {
-    console.log("the id in the api: ", userId);
     const { data } = await axiosWithAuth().get(`/api/orders/${userId}`);
-    console.log("this is the data in api returned from the server: ", data);
   } catch (error) {
     throw error;
   }

@@ -4,7 +4,6 @@ import DisplayCart from "./DisplayCart";
 import { getCart } from "../api";
 import OrderSummary from "./OrderSummary";
 
-
 import { ElementsConsumer } from "@stripe/react-stripe-js";
 
 const Cart = () => {
@@ -13,15 +12,12 @@ const Cart = () => {
   useEffect(() => {
     getCart()
       .then((response) => {
-        console.log("response", response);
         setCart(response.cart.products);
       })
       .catch((error) => {
         setCart(error.message);
       });
   }, []);
-
-  console.log("cart", cart);
 
   return (
     <>
@@ -39,7 +35,6 @@ const Cart = () => {
             </ElementsConsumer>
           </div>
         </div>
-
       </div>
     </>
   );

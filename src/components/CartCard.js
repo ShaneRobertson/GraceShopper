@@ -7,8 +7,6 @@ import { removeFromCart, addCount, subtractCount } from "../api";
 export default function CartCard({ products }) {
   const uniqueArr = [...new Set(products.map(JSON.stringify))].map(JSON.parse);
 
-  console.log("products", products, uniqueArr);
-
   function increment(id) {
     addCount(id);
     window.location.reload(false);

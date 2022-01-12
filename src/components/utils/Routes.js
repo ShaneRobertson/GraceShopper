@@ -30,7 +30,6 @@ const Routes = () => {
   useEffect(() => {
     getProducts()
       .then((response) => {
-        console.log("products are: ", response);
         setProducts(response.allProducts);
       })
       .catch((error) => {
@@ -64,8 +63,6 @@ const Routes = () => {
         : setIsAdmin(false);
     }
   }, []);
-
-  // console.log("adminOrders in Routes: ", adminOrders)
 
   return (
     <>

@@ -15,15 +15,12 @@ const LogIn = ({ setOpen }) => {
     event.preventDefault();
     await loginUser(credentials.username, credentials.password)
       .then((response) => {
-        console.log("the error from logging in : ", response);
         if (response.message) {
-          console.log(response);
-
           setLoginError(true);
         } else {
           localStorage.setItem("token", response.token);
           localStorage.setItem("user", JSON.stringify(response.user));
-          console.log("userObject upon login:", response);
+
           setOpen(false);
           window.location.reload(false);
         }
@@ -41,10 +38,8 @@ const LogIn = ({ setOpen }) => {
   // sends token that we get from login success
   // googleData is obj with token in it
   const handleLogin = async (googleData) => {
-    console.log("google data", googleData);
     await sendGoogleData(googleData)
       .then((res) => {
-        console.log("response", res);
         localStorage.setItem("token", res.token);
 
         //add info to my account fields...

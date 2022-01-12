@@ -6,7 +6,6 @@ import { Card, Icon, Button } from "semantic-ui-react";
 export default function VisitorCard({ products }) {
   const uniqueArr = [...new Set(products.map(JSON.stringify))].map(JSON.parse);
 
-  console.log("products", products, uniqueArr);
   return (
     <>
       {uniqueArr.map((product) => {
@@ -22,7 +21,6 @@ export default function VisitorCard({ products }) {
           count,
         } = product;
 
-        console.log("count", count);
         const [showText, setShowText] = useState(true);
         let truncatedDesc = showText ? description.slice(0, 50) : description;
 
@@ -30,7 +28,7 @@ export default function VisitorCard({ products }) {
           const index = products.findIndex(
             (product) => product.id === productId
           );
-          console.log("index", index, products, productId);
+
           const newProducts = [];
           if (index !== -1) {
             products.splice(index, 1);
@@ -38,45 +36,39 @@ export default function VisitorCard({ products }) {
           for (let i = 0; i < product.length; i++) {
             newProducts.push(oldProducts[i]);
           }
-          console.log("cart card new", products);
+
           localStorage.setItem("cart", JSON.stringify(products));
           window.location.reload(false);
         };
 
         function increment(id) {
-          //console.log("id", id);
           const product = uniqueArr.find((product) => {
-            //console.log("product.id", product.id);
             return product.id === id;
           });
           product.count++;
-          console.log("increment", product);
+
           const remove = uniqueArr.filter((product) => {
             return product.id !== id;
           });
           const newCart = [product, ...remove];
-          console.log("new cart", newCart);
+
           localStorage.setItem("cart", JSON.stringify(newCart));
           window.location.reload(false);
-          // console.log("uniqueArr", product);
         }
 
         function decrement(id) {
-          //console.log("id", id);
           const product = uniqueArr.find((product) => {
-            //console.log("product.id", product.id);
             return product.id === id;
           });
           product.count--;
-          console.log("decrement", product);
+
           const remove = uniqueArr.filter((product) => {
             return product.id !== id;
           });
           const newCart = [product, ...remove];
-          console.log("new cart", newCart);
+
           localStorage.setItem("cart", JSON.stringify(newCart));
           window.location.reload(false);
-          // console.log("uniqueArr", product);
         }
 
         return (

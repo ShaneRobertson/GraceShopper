@@ -16,14 +16,12 @@ const OrderSummary = ({ stripe, elements }) => {
   const [charge, setCharge] = useState();
 
   const home = () => {
-    console.log("fired");
     history.push("/");
   };
 
   useEffect(() => {
     getCart()
       .then((response) => {
-        console.log("response", response);
         setCart(response.cart.products);
         setCartId(response.cart.id);
       })
@@ -31,17 +29,14 @@ const OrderSummary = ({ stripe, elements }) => {
         setCart(error.message);
       });
   }, []);
-  console.log("cart id", cartId);
 
   // parsing string from local storage
   cart.map((product) => {
     for (let i = 0; i < product.count; i++) {
       totalArr.push(parseFloat(product.price));
     }
-    console.log("product.count", product.count, product);
   });
 
-  console.log("total arr", totalArr);
   const total = totalArr.reduce((a, b) => a + b, 0).toFixed(2);
 
   const Checkout = async (event) => {
@@ -55,17 +50,15 @@ const OrderSummary = ({ stripe, elements }) => {
     if (result.error) {
       console.log(result.error.message);
     } else {
-      console.log(result.token);
       await sendToken(total, result.token).then((res) => {
-        console.log("res", res);
         setCharge(res.charge);
       });
-      console.log("cartId", cartId);
+
       checkout(JSON.parse(localStorage.getItem("user")).id, cartId);
       setOpen(true);
     }
   };
-  console.log("modal", open);
+
   return (
     <>
       {open && <OrderSuccess charge={charge} />}

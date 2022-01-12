@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 function OrderSuccess({ total, charge }) {
   const history = useHistory();
   const home = () => {
-    console.log("fired");
     history.push("/");
   };
   return (

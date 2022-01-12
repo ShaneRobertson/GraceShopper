@@ -12,20 +12,14 @@ const VisitorSummary = ({ stripe, elements }) => {
   const [charge, setCharge] = useState();
 
   const totalArr = [];
-  console.log(
-    "local storage summary",
-    JSON.parse(localStorage.getItem("cart"))
-  );
+
   // parsing string from local storage
   JSON.parse(localStorage.getItem("cart")).map((product) => {
     for (let i = 0; i < product.count; i++) {
       totalArr.push(parseFloat(product.price));
     }
-
-    console.log("product.count", product.count, product);
   });
 
-  console.log("total arr", totalArr);
   const total = totalArr.reduce((a, b) => a + b, 0).toFixed(2);
 
   const Checkout = async (event) => {
@@ -38,9 +32,7 @@ const VisitorSummary = ({ stripe, elements }) => {
     if (result.error) {
       console.log(result.error.message);
     } else {
-      console.log(result.token);
       await sendToken(total, result.token).then((res) => {
-        console.log("res", res);
         setCharge(res.charge);
       });
       localStorage.setItem("cart", JSON.stringify([]));
@@ -51,10 +43,9 @@ const VisitorSummary = ({ stripe, elements }) => {
   const history = useHistory();
 
   const home = () => {
-    console.log("fired");
     history.push("/");
   };
-  console.log("total", total);
+
   return (
     <>
       {open && <OrderSuccess charge={charge} />}

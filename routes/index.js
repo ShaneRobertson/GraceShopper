@@ -6,7 +6,6 @@ const apiRouter = require("express").Router();
 const { default: axios } = require("axios");
 const jwt = require("jsonwebtoken");
 const stripe = require("stripe")(process.env.STRIPEKEY);
-console.log("env", process.env.STRIPEKEY);
 
 // Google token confirmation
 const { OAuth2Client } = require("google-auth-library");
@@ -43,14 +42,14 @@ const {
 function verifyToken(req, res, next) {
   //get Auth header
   const bearerHeader = req.headers["authorization"];
-  console.log("bearerheader", bearerHeader);
+  // console.log("bearerheader", bearerHeader);
   // check if bearer is undefined
   if (typeof bearerHeader !== "undefined") {
     const bearer = bearerHeader.split(" ");
-    console.log("bearer", bearer);
+    //  console.log("bearer", bearer);
     // get token on index 1 from array
     const bearerToken = bearer[1];
-    console.log("bearertoken", bearerToken);
+    // console.log("bearertoken", bearerToken);
     // adding token to req object - set token
     req.token = bearerToken;
     next();
@@ -79,8 +78,7 @@ apiRouter.get("/users", verifyToken, async (req, res, next) => {
         res.send({ error: err, status: 403 });
       } else if (authData.user.role === "admin") {
         const allUsers = await getUsers();
-        console.log("all the users: ", allUsers);
-        console.log("authdata", authData);
+
         res.send({
           allUsers,
         });
@@ -110,10 +108,10 @@ apiRouter.get("/products", async (req, res, next) => {
 // retrieve product by Id
 apiRouter.get("/products/:productId", async (req, res, next) => {
   const { productId } = req.params;
-  console.log("productId", productId);
+
   try {
     const product = await getProductById(productId);
-    console.log("product", product);
+
     res.send({
       product,
     });
@@ -129,9 +127,8 @@ apiRouter.get("/cart", verifyToken, async (req, res, next) => {
       if (err) {
         res.send({ error: err, status: 403 });
       } else {
-        console.log("auth data above", authData);
         const cart = await getCart({ userId: authData.user.id });
-        console.log("auth data", authData);
+
         res.send({ cart });
       }
     });
@@ -148,7 +145,7 @@ apiRouter.get("/orders", verifyToken, async (req, res, next) => {
         res.send({ error: err, status: 403 });
       } else {
         const order = await getOrder(authData.user.id);
-        console.log("auth data", authData);
+
         res.send({ order });
       }
     });
@@ -160,14 +157,12 @@ apiRouter.get("/orders", verifyToken, async (req, res, next) => {
 // get all Orders > admin
 apiRouter.get("/orders/admin", verifyToken, async (req, res, next) => {
   try {
-    console.log("am i in the /orders route?");
     jwt.verify(req.token, "secretkey", async (err, authData) => {
       if (err) {
         res.send({ error: err, status: 403 });
       } else if (authData.user.role === "admin") {
         const allOrders = await getOrders();
-        console.log("all orders: ", allOrders);
-        console.log("authdata", authData);
+
         res.send({
           allOrders,
         });
@@ -189,16 +184,13 @@ apiRouter.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
   try {
     const user = await getUserByUsername(username);
-    console.log("password", password);
 
     if (user) {
       if (user.password === password) {
-        console.log("logged in", user);
         // encrypts user object, needs encrypting method
         // callback to handle error or send token in json
         jwt.sign({ user }, "secretkey", { expiresIn: "1day" }, (err, token) => {
           if (err) {
-            console.log("jwt error", err);
             res.send({ error: err, status: 403 });
           } else {
             res.json({ user, token });
@@ -222,10 +214,8 @@ apiRouter.post("/register", async (req, res, next) => {
   // required fields from table
   const { username, email, role, password } = req.body;
   try {
-    console.log("hello");
     const user = await createUser({ username, email, role, password });
     if (user) {
-      console.log("created user", user);
       // encrypt user
       jwt.sign(
         { user },
@@ -233,7 +223,6 @@ apiRouter.post("/register", async (req, res, next) => {
         { expiresIn: "1day" },
         async (err, token) => {
           if (err) {
-            console.log("jwt error", err);
             res.sendStatus(403);
           } else {
             res.json({ user, token });
@@ -245,7 +234,6 @@ apiRouter.post("/register", async (req, res, next) => {
       res.send({ message: "Error creating user." });
     }
   } catch (error) {
-    console.log("error in routes file:", error);
     // next(error);
     if (error.includes("users_email_key")) {
       next({
@@ -266,24 +254,23 @@ apiRouter.post("/register", async (req, res, next) => {
 apiRouter.post("/google-login", async (req, res, next) => {
   // grab token from body
   const { token } = req.body;
-  console.log("token", token);
+
   try {
     // checks token and client id
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.REACT_APP_CLIENTID,
     });
-    console.log("ticket1", ticket);
+
     // grab fields from token object
     const { name, email } = ticket.getPayload();
-    console.log("ticket payload", ticket.getPayload());
+
     const role = "user";
     const password = "password";
     // grab the user by username
     const user = await getUserByUsername(name);
     // check if user already exists
     if (user) {
-      console.log("google name", name, user);
       // encrypt user with json webtoken
       jwt.sign(
         { user },
@@ -291,7 +278,6 @@ apiRouter.post("/google-login", async (req, res, next) => {
         { expiresIn: "1day" },
         async (err, token) => {
           if (err) {
-            console.log("jwt error", err);
             res.sendStatus(403);
           } else {
             res.json({ user, token });
@@ -306,7 +292,7 @@ apiRouter.post("/google-login", async (req, res, next) => {
         role,
         password,
       });
-      console.log("google name", name);
+
       // encrypt user
       jwt.sign(
         { user },
@@ -314,7 +300,6 @@ apiRouter.post("/google-login", async (req, res, next) => {
         { expiresIn: "1day" },
         async (err, token) => {
           if (err) {
-            console.log("jwt error", err);
             res.sendStatus(403);
           } else {
             res.json({ user, token });
@@ -344,15 +329,8 @@ apiRouter.post("/google-login", async (req, res, next) => {
 // ADMIN only
 apiRouter.post("/products", verifyToken, async (req, res, next) => {
   // required fields from table
-  const {
-    name,
-    description,
-    photoUrl,
-    department,
-    price,
-    count,
-    quantity,
-  } = req.body;
+  const { name, description, photoUrl, department, price, count, quantity } =
+    req.body;
   try {
     jwt.verify(req.token, "secretkey", async (err, authData) => {
       if (err) {
@@ -388,7 +366,6 @@ apiRouter.post("/checkout", async (req, res, next) => {
       cartId,
     });
     if (order) {
-      console.log("created order", order);
       res.json({ order });
     }
     await createCart({ userId, productId: [] });
@@ -401,7 +378,6 @@ apiRouter.post("/stripe", async (req, res, next) => {
   // required fields from table
   const { token, total } = req.body;
   try {
-    console.log("total", parseFloat(total), Math.ceil(parseFloat(total)) * 100);
     const charge = await stripe.charges.create({
       amount: parseFloat(total) * 100,
       currency: "USD",
@@ -426,12 +402,11 @@ apiRouter.delete("/users/:userId", verifyToken, async (req, res, next) => {
       if (err) {
         res.send({ error: err, status: 403 });
       } else if (authData.user.role === "admin") {
-        console.log("authData.user.id", typeof authData.user.id, typeof userId);
         if (authData.user.id == userId) {
           res.send({ message: "User is logged in and can't be deleted!" });
         } else {
           const deletedUser = await deleteUser(userId);
-          console.log("authdata1", authData);
+
           res.send({
             deletedUser,
           });
@@ -500,15 +475,13 @@ apiRouter.patch(
     if (password) {
       fieldsObject.password = password;
     }
-    console.log("patch params", req.params.userId);
+
     try {
-      console.log("patch params", req.params.userId);
       const user = await updateUser(fieldsObject, userId);
       jwt.verify(req.token, "secretkey", async (err, authData) => {
         if (err) {
           res.send({ error: err, status: 403 });
         } else if (authData.user.id == userId) {
-          console.log("updated user", user);
           res.send({ user });
         } else {
           res.send({ message: "User can't update other users!" });
@@ -586,7 +559,7 @@ apiRouter.patch("/products/:productId/update", async (req, res, next) => {
   }
 
   const { productId } = req.params;
-  console.log("in the routes updateFields: ", updateFields);
+
   try {
     const product = await updateProduct(productId, updateFields);
     res.send(product);
@@ -598,14 +571,14 @@ apiRouter.patch("/products/:productId/update", async (req, res, next) => {
 // updates cart
 apiRouter.patch("/cart", verifyToken, async (req, res, next) => {
   const { userId, productId } = req.body;
-  console.log("user id and product id", userId, productId);
+
   try {
     jwt.verify(req.token, "secretkey", async (err, authData) => {
       if (err) {
         res.send({ error: err, status: 403 });
       } else {
         const updatedCart = await addToCart({ userId, productId });
-        console.log("updated cart", updatedCart);
+
         res.send({ updatedCart });
       }
     });
@@ -624,7 +597,7 @@ apiRouter.patch("/cart/remove", verifyToken, async (req, res, next) => {
         res.send({ error: err, status: 403 });
       } else {
         const updatedCart = await removeFromCart({ userId, productId });
-        console.log("updated cart", updatedCart);
+
         res.send({ updatedCart });
       }
     });
@@ -635,14 +608,14 @@ apiRouter.patch("/cart/remove", verifyToken, async (req, res, next) => {
 
 apiRouter.patch("/count", verifyToken, async (req, res, next) => {
   const { id } = req.body;
-  console.log("product id", id);
+
   try {
     jwt.verify(req.token, "secretkey", async (err, authData) => {
       if (err) {
         res.send({ error: err, status: 403 });
       } else {
         const updatedCount = await addCount(id);
-        console.log("updated cart", updatedCount);
+
         res.send({ updatedCount });
       }
     });
@@ -653,14 +626,14 @@ apiRouter.patch("/count", verifyToken, async (req, res, next) => {
 
 apiRouter.patch("/count/subtract", verifyToken, async (req, res, next) => {
   const { id } = req.body;
-  console.log("product id", id);
+
   try {
     jwt.verify(req.token, "secretkey", async (err, authData) => {
       if (err) {
         res.send({ error: err, status: 403 });
       } else {
         const updatedCount = await subtractCount(id);
-        console.log("updated cart", updatedCount);
+
         res.send({ updatedCount });
       }
     });
@@ -671,14 +644,14 @@ apiRouter.patch("/count/subtract", verifyToken, async (req, res, next) => {
 
 apiRouter.get("/orders/:userId", verifyToken, async (req, res, next) => {
   const { userId } = req.params;
-  console.log("the userid in the routes: ", userId);
+
   try {
     jwt.verify(req.token, "secretkey", async (err, authData) => {
       if (err) {
         res.send({ error: err, status: 403 });
       } else {
         const orders = await deleteOrdersAndCart(userId);
-        console.log("deleted orders", orders);
+
         res.send(orders);
       }
     });

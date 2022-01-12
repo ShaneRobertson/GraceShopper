@@ -18,8 +18,6 @@ export default function ProductCard({
 }) {
   // add products to db cart
   const addToDbCart = (userId, productId) => {
-    console.log("adding to db");
-
     addToCart(userId, [productId]);
     window.location.reload(false);
   };

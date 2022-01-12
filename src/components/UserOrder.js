@@ -3,13 +3,12 @@ import { Table } from "semantic-ui-react";
 
 const UserOrder = ({ adminOrders }) => {
   const totalArr = [];
-  console.log('$$$: ', adminOrders)
 
   return (
     <>
       {JSON.parse(localStorage.getItem("user")).role === "admin" ? (
         <div style={{ paddingBottom: "19rem" }}>
-          <Table celled >
+          <Table celled>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Order Number</Table.HeaderCell>
@@ -21,7 +20,6 @@ const UserOrder = ({ adminOrders }) => {
             </Table.Header>
             <Table.Body>
               {adminOrders.cartArr.map((cart) => {
-                console.log("map cart", cart);
                 return (
                   <Table.Row>
                     <Table.Cell>{cart.rows.id}</Table.Cell>
@@ -30,7 +28,7 @@ const UserOrder = ({ adminOrders }) => {
                     <Table.Cell>
                       {cart.cart.products.map((product) => {
                         totalArr.push(parseFloat(product.price));
-                        console.log("product", product);
+
                         return (
                           <div>
                             {product.name} - ${product.price} x {product.count}
@@ -46,9 +44,8 @@ const UserOrder = ({ adminOrders }) => {
           </Table>
         </div>
       ) : (
-          ""
-        )}
-
+        ""
+      )}
     </>
   );
 };

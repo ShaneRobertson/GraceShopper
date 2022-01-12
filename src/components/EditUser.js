@@ -19,7 +19,6 @@ const EditUser = ({ userInfo, setUserInfo }) => {
 
   const handleUserUpdate = async () => {
     if (validate(newEmail)) {
-      console.log("email is good");
       setEmailErrorMsg(false);
       await updateUser(newUsername, newEmail, newPassword, id)
         .then((response) => {
@@ -32,12 +31,9 @@ const EditUser = ({ userInfo, setUserInfo }) => {
         });
       setNewPassword("");
     } else {
-      console.log("email is bad");
       setEmailErrorMsg(true);
     }
   };
-
-  console.log("New user object:", newUserInfo);
 
   return (
     <>

@@ -48,17 +48,16 @@ async function createUser({ username, email, role, password }) {
 }
 
 async function updateUser(fieldsObject, userId) {
-  console.log("parameters", fieldsObject, userId);
   try {
     const retrievedUser = await getUserById(userId);
-    console.log("retrieved user", retrievedUser);
+
     if (retrievedUser === null) {
       throw new Error("User with that id does not exist.");
     }
     const setString = Object.keys(fieldsObject)
       .map((key, index) => `"${key}"=$${index + 1}`)
       .join(", ");
-    console.log("setString in DB", setString);
+
     const {
       rows: [user],
     } = await client.query(
@@ -166,9 +165,8 @@ async function getOrders() {
 
     const cartArr = [];
     for (let i = 0; i < rows.length; i++) {
-      console.log("user id", rows[i].userId);
       const cart = await getCompletedCart({ userId: rows[i].cartId });
-      console.log("cart", cart, cart.length);
+
       const totalArr = [];
 
       if (cart !== []) {
@@ -177,11 +175,11 @@ async function getOrders() {
         });
 
         const total = totalArr.reduce((a, b) => a + b, 0).toFixed(2);
-        console.log("total", totalArr);
+
         cartArr.push({ rows: rows[i], cart, total });
       }
     }
-    console.log("cart array get orders", cartArr);
+
     return { cartArr };
   } catch (error) {
     throw error;
@@ -237,7 +235,7 @@ async function updateProduct(productId, fields = {}) {
   const setString = Object.keys(fields)
     .map((key, index) => `"${key}"=$${index + 1}`)
     .join(", ");
-  console.log("this is the setString: ", setString);
+
   // update products table
   try {
     // update any fields that need to be updated
@@ -286,7 +284,6 @@ async function createCart({ userId, productId, status = "created" }) {
 // not grabbing completed carts only created and processing.
 // grab user specific cart
 async function getCart({ userId }) {
-  console.log("userId", userId);
   try {
     const { rows } = await client.query(
       `
@@ -295,18 +292,16 @@ async function getCart({ userId }) {
     `,
       [userId]
     );
-    console.log("rows", rows);
+
     const cart = [];
     for (let i = 0; i < rows.length; i++) {
       rows[i].status === "processing" ? cart.push(rows[i]) : null;
     }
     if (rows.length > 0) {
       if (cart.length > 0) {
-        console.log("inside processing cart", cart);
         const products = cart[0].productId;
         const productArr = [];
         for (i = 0; i < products.length; i++) {
-          console.log("product Id", products[i]);
           const {
             rows: [product],
           } = await client.query(`
@@ -315,14 +310,13 @@ async function getCart({ userId }) {
           `);
           productArr.push(product);
         }
-        console.log("list of products", productArr);
+
         return { id: cart[0].id, products: productArr, status: cart[0].status };
       }
-      console.log("inside cart", rows);
+
       const products = rows[0].productId;
       const productArr = [];
       for (i = 0; i < products.length; i++) {
-        console.log("product Id", products[i]);
         const {
           rows: [product],
         } = await client.query(`
@@ -331,10 +325,9 @@ async function getCart({ userId }) {
           `);
         productArr.push(product);
       }
-      console.log("list of products", productArr);
+
       return { id: rows[0].id, products: productArr, status: rows[0].status };
     } else {
-      console.log("outside cart", rows);
       return [];
     }
   } catch (error) {
@@ -355,11 +348,9 @@ async function getCompletedCart({ userId }) {
       [userId]
     );
     if (rows.length > 0) {
-      console.log("inside cart", rows);
       const products = rows[0].productId;
       const productArr = [];
       for (i = 0; i < products.length; i++) {
-        console.log("product Id", products[i]);
         const {
           rows: [product],
         } = await client.query(`
@@ -368,10 +359,9 @@ async function getCompletedCart({ userId }) {
           `);
         productArr.push(product);
       }
-      console.log("list of products", productArr);
+
       return { id: rows[0].id, products: productArr, status: rows[0].status };
     } else {
-      console.log("outside cart", rows);
       return [];
     }
   } catch (error) {
@@ -392,9 +382,8 @@ async function getOrder(userId) {
 
     const cartArr = [];
     for (let i = 0; i < rows.length; i++) {
-      console.log("user id", rows[i].userId);
       const cart = await getCompletedCart({ userId: rows[i].cartId });
-      console.log("cart", cart, cart.length);
+
       const totalArr = [];
 
       if (cart !== []) {
@@ -402,11 +391,11 @@ async function getOrder(userId) {
           totalArr.push(parseFloat(product.price * product.count));
         });
         const total = totalArr.reduce((a, b) => a + b, 0).toFixed(2);
-        console.log("total", totalArr);
+
         cartArr.push({ rows: rows[i], cart, total });
       }
     }
-    console.log("cart array get orders", cartArr);
+
     return { cartArr };
   } catch (error) {
     throw error;
@@ -420,18 +409,17 @@ async function addToCart({ userId, productId }) {
   const cart = await getCart({ userId });
   const cartId = cart.id;
   const oldProducts = cart.products;
-  console.log("add to cart", cart);
+
   const newProducts = [];
   if (oldProducts.length > 0) {
     for (i = 0; i < oldProducts.length; i++) {
       newProducts.push(oldProducts[i].id);
     }
-    console.log("productId", productId);
     newProducts.push(...productId);
   } else {
     newProducts.push(...productId);
   }
-  console.log("new cart", newProducts);
+
   try {
     const {
       rows: [updatedCart],
@@ -444,7 +432,7 @@ async function addToCart({ userId, productId }) {
     `,
       [newProducts, "processing", cartId]
     );
-    console.log("updated cart", updatedCart);
+
     return updatedCart;
   } catch (error) {
     throw error;
@@ -453,7 +441,6 @@ async function addToCart({ userId, productId }) {
 
 // still working on this bad boy...
 async function removeFromCart({ userId, productId }) {
-  console.log("userId, productId", userId, productId);
   const cart = await getCart({ userId });
 
   const oldProducts = cart.products;
@@ -463,10 +450,9 @@ async function removeFromCart({ userId, productId }) {
       const index = oldProducts.findIndex(
         (product) => product.id === productId
       );
-      console.log("INDEX", index, oldProducts, productId);
+
       if (index !== -1) {
         oldProducts.splice(index, 1);
-        console.log("ARRAY", oldProducts);
       }
 
       for (i = 0; i < oldProducts.length; i++) {
@@ -485,8 +471,6 @@ async function removeFromCart({ userId, productId }) {
         [idArr, "processing"]
       );
 
-      console.log("UPDATEDCART", updatedCart);
-
       return updatedCart;
     }
   } catch (error) {
@@ -496,7 +480,6 @@ async function removeFromCart({ userId, productId }) {
 
 // who is checking out and which cart
 async function checkout({ userId, cartId }) {
-  console.log("checkout user cart id", userId, cartId);
   try {
     const {
       rows: [updatedCart],
@@ -519,7 +502,6 @@ async function checkout({ userId, cartId }) {
       [userId, cartId]
     );
 
-    console.log("created order", order);
     return order;
   } catch (error) {
     throw error;
@@ -527,7 +509,6 @@ async function checkout({ userId, cartId }) {
 }
 
 async function deleteUser(userId) {
-  console.log("userId", userId);
   try {
     const {
       rows: [order],
@@ -561,7 +542,6 @@ async function deleteUser(userId) {
       [userId]
     );
 
-    console.log("user", user);
     return { order, cart, user };
   } catch (error) {
     throw error;
@@ -601,7 +581,6 @@ async function deleteProduct(productId) {
     `,
       [productId]
     );
-    console.log("product", product);
 
     return product;
   } catch (error) {
@@ -611,7 +590,7 @@ async function deleteProduct(productId) {
 
 async function addCount(id) {
   const product = await getProductById(id);
-  console.log("product count", product);
+
   try {
     const { rows } = await client.query(
       `
@@ -630,7 +609,7 @@ async function addCount(id) {
 
 async function subtractCount(id) {
   const product = await getProductById(id);
-  console.log("product count", product);
+
   try {
     const { rows } = await client.query(
       `
