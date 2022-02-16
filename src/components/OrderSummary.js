@@ -84,12 +84,12 @@ const OrderSummary = ({ stripe, elements }) => {
 
           <div className="flex">
             <p className="card-number">Card number</p>
-            <p className="expiration">Exp date & CVC</p>
+            <p className="expiration">Exp date and CVC</p>
           </div>
           <form onSubmit={Checkout} className="order-summary-form">
             <CardDetails className="card-details" />
             <Button color="red" className="order-summary-button">
-              Checkout & Pay
+              Checkout and Pay
             </Button>{" "}
           </form>
         </Card.Content>
