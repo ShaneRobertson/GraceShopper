@@ -64,6 +64,12 @@ const LogIn = ({ setOpen }) => {
 
   return (
     <>
+      <ul>
+        <li>Admin Credentials</li>
+        <li>Username: admin</li>
+        <li>Password: admin</li>
+      </ul>
+
       <Form className="logIn">
         <h2>Log in</h2>
         <GoogleLogin
@@ -76,6 +82,7 @@ const LogIn = ({ setOpen }) => {
         />
         <br></br>
         <div>or</div>
+
         <Input
           style={{ width: "50%", marginTop: "15px" }}
           name="username"

@@ -61,9 +61,11 @@ export default function ProductCard({
           let httpsImage;
           if (photoUrl) {
             if (photoUrl.includes("https")) {
+              console.log("image is: ", httpsImage);
               httpsImage = photoUrl;
             } else {
               httpsImage = photoUrl.replace("http", "https");
+              console.log("image is: ", httpsImage);
             }
           }
 

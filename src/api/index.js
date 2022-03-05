@@ -55,6 +55,7 @@ export async function addToCart(userId, productId) {
   };
 
   try {
+    console.log(`line 58 says: ${dataToSend}`);
     if (dataToSend.userId && dataToSend.productId.length > 0) {
       const { data } = await axiosWithAuth().patch(`/api/cart`, dataToSend);
       return data;

@@ -108,10 +108,10 @@ async function createInitialUsers() {
     });
 
     const userFour = await createUser({
-      username: "Admin",
+      username: "admin",
       email: "admin@gmail.com",
       role: "admin",
-      password: "admin123F",
+      password: "admin",
     });
 
     console.log("Success creating users!");

@@ -1,3 +1,4 @@
+import { text } from "body-parser";
 import React, { useState } from "react";
 import { Modal, Divider, Menu, Grid } from "semantic-ui-react";
 import LogIn from "./LogIn";
@@ -15,7 +16,9 @@ function SignIn() {
       open={open}
       trigger={<Menu.Item>Sign In</Menu.Item>}
     >
-      <Modal.Header>Please sign in or register</Modal.Header>
+      <Modal.Header style={{ textAlign: "center" }}>
+        Please sign in or register
+      </Modal.Header>
       <div>
         <Grid columns={2}>
           <Grid.Column>
