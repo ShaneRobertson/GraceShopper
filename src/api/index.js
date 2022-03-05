@@ -53,7 +53,7 @@ export async function addToCart(userId, productId) {
     userId,
     productId,
   };
-
+  console.log(`line 58 says: ${dataToSend}`);
   try {
     console.log(`line 58 says: ${dataToSend}`);
     if (dataToSend.userId && dataToSend.productId.length > 0) {
