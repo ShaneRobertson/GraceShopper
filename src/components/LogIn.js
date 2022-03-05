@@ -59,7 +59,7 @@ const LogIn = ({ setOpen }) => {
         console.log(error);
       });
 
-    // window.location.reload(false);
+    window.location.reload(false);
   };
 
   return (
@@ -72,7 +72,7 @@ const LogIn = ({ setOpen }) => {
 
       <Form className="logIn">
         <h2>Log in</h2>
-        <GoogleLogin
+        {/* <GoogleLogin
           style={{ marginBottom: "15px" }}
           clientId={process.env.REACT_APP_CLIENTID}
           buttonText="with Google"
@@ -81,7 +81,7 @@ const LogIn = ({ setOpen }) => {
           cookiePolicy={"single_host_origin"}
         />
         <br></br>
-        <div>or</div>
+        <div>or</div> */}
 
         <Input
           style={{ width: "50%", marginTop: "15px" }}
