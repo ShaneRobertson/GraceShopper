@@ -25,16 +25,19 @@ const VisitorSummary = ({ stripe, elements }) => {
   const Checkout = async (event) => {
     event.preventDefault(event);
     if (!stripe || !elements) {
+      console.log("no !stripe || !elements");
       return;
     }
     try {
       const card = elements.getElement(CardElement);
+      console.log("card is: ", card);
       const result = await stripe.createToken(card);
       console.log("result is: ", result);
       if (result.error) {
         console.log(result.error.message);
       } else {
         await sendToken(total, result.token).then((res) => {
+          console.log(res);
           setCharge(res.charge);
         });
         localStorage.setItem("cart", JSON.stringify([]));
