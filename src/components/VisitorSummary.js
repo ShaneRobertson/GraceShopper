@@ -27,17 +27,21 @@ const VisitorSummary = ({ stripe, elements }) => {
     if (!stripe || !elements) {
       return;
     }
-    const card = elements.getElement(CardElement);
-    const result = await stripe.createToken(card);
-    console.log("result is: ", result);
-    if (result.error) {
-      console.log(result.error.message);
-    } else {
-      await sendToken(total, result.token).then((res) => {
-        setCharge(res.charge);
-      });
-      localStorage.setItem("cart", JSON.stringify([]));
-      setOpen(true);
+    try {
+      const card = elements.getElement(CardElement);
+      const result = await stripe.createToken(card);
+      console.log("result is: ", result);
+      if (result.error) {
+        console.log(result.error.message);
+      } else {
+        await sendToken(total, result.token).then((res) => {
+          setCharge(res.charge);
+        });
+        localStorage.setItem("cart", JSON.stringify([]));
+        setOpen(true);
+      }
+    } catch (err) {
+      console.log("VisitorSummary 44 | err", err);
     }
   };
 
