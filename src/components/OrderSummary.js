@@ -48,9 +48,11 @@ const OrderSummary = ({ stripe, elements }) => {
       const card = elements.getElement(CardElement);
       const result = await stripe.createToken(card);
       if (result.error) {
+        console.log("error on OrderSummary 51: ", result.error);
         console.log(result.error.message);
       } else {
         await sendToken(total, result.token).then((res) => {
+          console.log("response OrderSummary 55: ", res);
           setCharge(res.charge);
         });
 
