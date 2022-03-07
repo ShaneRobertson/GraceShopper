@@ -29,6 +29,7 @@ const VisitorSummary = ({ stripe, elements }) => {
     }
     const card = elements.getElement(CardElement);
     const result = await stripe.createToken(card);
+    console.log("result is: ", result);
     if (result.error) {
       console.log(result.error.message);
     } else {
