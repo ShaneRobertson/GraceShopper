@@ -44,18 +44,21 @@ const OrderSummary = ({ stripe, elements }) => {
     if (!stripe || !elements) {
       return;
     }
+    try {
+      const card = elements.getElement(CardElement);
+      const result = await stripe.createToken(card);
+      if (result.error) {
+        console.log(result.error.message);
+      } else {
+        await sendToken(total, result.token).then((res) => {
+          setCharge(res.charge);
+        });
 
-    const card = elements.getElement(CardElement);
-    const result = await stripe.createToken(card);
-    if (result.error) {
-      console.log(result.error.message);
-    } else {
-      await sendToken(total, result.token).then((res) => {
-        setCharge(res.charge);
-      });
-
-      checkout(JSON.parse(localStorage.getItem("user")).id, cartId);
-      setOpen(true);
+        checkout(JSON.parse(localStorage.getItem("user")).id, cartId);
+        setOpen(true);
+      }
+    } catch (err) {
+      console.log("OrderSummary 69 | err: ", err);
     }
   };
 
