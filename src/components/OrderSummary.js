@@ -47,12 +47,13 @@ const OrderSummary = ({ stripe, elements }) => {
     try {
       const card = elements.getElement(CardElement);
       const result = await stripe.createToken(card);
+      console.log("result on line 49 is: ", result);
       if (result.error) {
         console.log("error on OrderSummary 51: ", result.error);
         console.log(result.error.message);
       } else {
         await sendToken(total, result.token).then((res) => {
-          console.log("response OrderSummary 55: ", res);
+          console.log("response OrderSummary 56: ", res);
           setCharge(res.charge);
         });
 
