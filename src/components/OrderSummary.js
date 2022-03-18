@@ -46,8 +46,9 @@ const OrderSummary = ({ stripe, elements }) => {
     }
     try {
       const card = elements.getElement(CardElement);
+      console.log("the card is: ", card);
       const result = await stripe.createToken(card);
-      console.log("result on line 49 is: ", result);
+      console.log("result on line 50 is: ", result);
       if (result.error) {
         console.log("error on OrderSummary 51: ", result.error);
         console.log(result.error.message);
@@ -61,7 +62,7 @@ const OrderSummary = ({ stripe, elements }) => {
         setOpen(true);
       }
     } catch (err) {
-      console.log("OrderSummary 69 | err: ", err);
+      console.log("OrderSummary 64 | err: ", err);
     }
   };
 
