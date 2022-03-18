@@ -64,7 +64,7 @@ const LogIn = ({ setOpen }) => {
 
   return (
     <>
-      <ul>
+      <ul style={{ margin: "10px" }}>
         <li>Admin Credentials</li>
         <li>Username: admin</li>
         <li>Password: admin</li>
