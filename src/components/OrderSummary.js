@@ -46,7 +46,7 @@ const OrderSummary = ({ stripe, elements }) => {
     }
     try {
       const card = elements.getElement(CardElement);
-      console.log("the card is: ", card);
+      console.log("the card is: ", elements.getElement(CardElement));
       const result = await stripe.createToken(card);
       console.log("result on line 50 is: ", result);
       if (result.error) {
