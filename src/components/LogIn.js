@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Button, Input, Form, Message } from "semantic-ui-react";
-import { loginUser, sendGoogleData } from "../api";
-// Google button
-import GoogleLogin from "react-google-login";
+import { loginUser } from "../api";
 
 const LogIn = ({ setOpen }) => {
   const [credentials, setCredentials] = useState({
@@ -11,8 +9,8 @@ const LogIn = ({ setOpen }) => {
   });
   const [loginError, setLoginError] = useState(false);
 
-  const login = async () => {
-    event.preventDefault();
+  const login = async (e) => {
+    e.preventDefault();
     await loginUser(credentials.username, credentials.password)
       .then((response) => {
         console.log("the error from logging in : ", response);
@@ -38,30 +36,6 @@ const LogIn = ({ setOpen }) => {
     setLoginError(false);
   };
 
-  // sends token that we get from login success
-  // googleData is obj with token in it
-  const handleLogin = async (googleData) => {
-    console.log("google data", googleData);
-    await sendGoogleData(googleData)
-      .then((res) => {
-        console.log("response", res);
-        localStorage.setItem("token", res.token);
-
-        //add info to my account fields...
-        //
-        if (res.user) {
-          localStorage.setItem("user", JSON.stringify(res.user));
-        } else {
-          localStorage.setItem("user", JSON.stringify(res.user));
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    window.location.reload(false);
-  };
-
   return (
     <>
       <ul style={{ margin: "10px", color: "orangered", listStyle: "none" }}>
@@ -72,17 +46,6 @@ const LogIn = ({ setOpen }) => {
 
       <Form className="logIn">
         <h2>Log in</h2>
-        {/* <GoogleLogin
-          style={{ marginBottom: "15px" }}
-          clientId={process.env.REACT_APP_CLIENTID}
-          buttonText="with Google"
-          onSuccess={handleLogin}
-          onFailure={handleLogin}
-          cookiePolicy={"single_host_origin"}
-        />
-        <br></br>
-        <div>or</div> */}
-
         <Input
           style={{ width: "50%", marginTop: "15px" }}
           name="username"
