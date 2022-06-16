@@ -24,7 +24,7 @@ const Routes = () => {
   const [userInfo, setUserInfo] = useState(
     JSON.parse(localStorage.getItem("user"))
   );
-  console.log(process.env.REACT_APP_STRIPEKEY);
+
   const StripePromise = loadStripe(process.env.REACT_APP_STRIPEKEY);
 
   useEffect(() => {

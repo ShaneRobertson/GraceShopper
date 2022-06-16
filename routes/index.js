@@ -3,13 +3,8 @@
 // create new instance of Router
 const apiRouter = require("express").Router();
 
-const { default: axios } = require("axios");
 const jwt = require("jsonwebtoken");
 const stripe = require("stripe")(process.env.STRIPEKEY);
-
-// Google token confirmation
-const { OAuth2Client } = require("google-auth-library");
-const client = new OAuth2Client(process.env.REACT_APP_CLIENTID);
 
 const {
   getUsers,
